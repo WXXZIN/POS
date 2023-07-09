@@ -23,22 +23,32 @@ VER_2023 : VER_2022의 개선점 보안<br>
 - 최초 실행 시 로그인 창
 - 관리자와 일반 사용자를 구분하여 메인 창으로 이동
 - 일반 사용자는 일부 기능 접근 불가
+
+### DB 구성
+![스크린샷 2023-07-09 232036](https://github.com/WXXZIN/POS/assets/138375011/952fb824-bdfb-45ea-88e4-402101e59009)
+![스크린샷 2023-07-09 231959](https://github.com/WXXZIN/POS/assets/138375011/ec6e9266-6cad-431e-be02-ad0eaa930d52)
+![스크린샷 2023-07-09 232023](https://github.com/WXXZIN/POS/assets/138375011/705e5fa0-208a-4932-ace2-88768e0c2f1a)
+
 ### 로그인
 ![스크린샷 2023-07-09 215040](https://github.com/WXXZIN/POS/assets/138375011/ea207887-ff57-4f91-a834-87be3947c335)
 ![스크린샷 2023-07-09 224233](https://github.com/WXXZIN/POS/assets/138375011/71ab7412-ce09-4993-a798-ec444d51b15e)
+
 ### 로그인 후 메인화면
 ![스크린샷 2023-07-09 215127](https://github.com/WXXZIN/POS/assets/138375011/2a427174-7c44-478f-ac18-e3630f8bf809)
 ![스크린샷 2023-07-09 224327](https://github.com/WXXZIN/POS/assets/138375011/207beacf-6df5-4af6-8eb3-42f9569fedf9)
+
 ### 사용자 관리
 ![스크린샷 2023-07-09 215514](https://github.com/WXXZIN/POS/assets/138375011/0881b049-dfeb-452d-860a-8ec8b6eee683)
+
 ### 판매
 ![스크린샷 2023-07-09 215200](https://github.com/WXXZIN/POS/assets/138375011/a65e8268-5be4-42f3-aa3c-2a68ea7f3100)
+
 ### 재고 관리
 ![스크린샷 2023-07-09 215504](https://github.com/WXXZIN/POS/assets/138375011/6895c3c9-36c8-4c0e-a38d-f9da5b9a8f63)
 ![스크린샷 2023-07-09 224338](https://github.com/WXXZIN/POS/assets/138375011/922552dc-4cb8-47a1-a7ad-f3a801558836)
+
 ### 영수증 업무
 ![스크린샷 2023-07-09 215453](https://github.com/WXXZIN/POS/assets/138375011/501575d1-b40e-40f5-9937-e29cea846706)
-<br>
 
 ## 개선점
  - 사용자 추가 기능을 관리자만 사용 가능하여 회원가입 부재
