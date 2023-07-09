@@ -3,37 +3,37 @@ package DB;
 import java.sql.SQLException;
 import java.util.Vector;
 
-public class StockDAO {
+public class ProductDAO {
 	DB db = new DB();
-	Vector<String> stocks = null;
+	Vector<String> products = null;
 	
-	public Vector<String> getStock() {
-		return stocks;
+	public Vector<String> getProduct() {
+		return products;
 	}
 
-	public Vector<Stock> getAllStock() {
+	public Vector<Product> getAllProduct() {
 		db.connectDB();
-		db.sql = "select * from stock";
+		db.sql = "select * from product";
 		
-		Vector<Stock> list = new Vector<Stock>();
+		Vector<Product> list = new Vector<Product>();
 		
-		stocks = new Vector<String>();
+		products = new Vector<String>();
 		
 		try {
 			db.pstmt = db.conn.prepareStatement(db.sql);
 			db.rs = db.pstmt.executeQuery();
 			
 			while(db.rs.next()) {
-				Stock stock = new Stock();
-				stock.setNumber(db.rs.getInt("number"));
-				stock.setStock_Name(db.rs.getString("name"));
-				stock.setStock_Count(db.rs.getInt("count"));
-				stock.setStock_Price(db.rs.getInt("price"));
+				Product product = new Product();
+				product.setPid(db.rs.getInt("pid"));
+				product.setProduct_name(db.rs.getString("name"));
+				product.setProduct_count(db.rs.getInt("count"));
+				product.setProduct_price(db.rs.getInt("price"));
 				
 				if (db.rs.getInt("count") > 0)
-					stocks.add(db.rs.getString("name"));
+					products.add(db.rs.getString("name"));
 				
-				list.add(stock);
+				list.add(product);
 			}
 		} 
 		
@@ -42,7 +42,7 @@ public class StockDAO {
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
 		
 		return list;
@@ -50,7 +50,7 @@ public class StockDAO {
 	
 	public int getPrice(String name) {
 		db.connectDB();
-		db.sql = "select price from stock where name = ?";
+		db.sql = "select price from product where name = ?";
 		int price = 0;
 		
 		try {
@@ -68,7 +68,7 @@ public class StockDAO {
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
 		
 		return price;
@@ -76,7 +76,7 @@ public class StockDAO {
 	
 	public int getCount(String name) {
 		db.connectDB();
-		db.sql = "select count from stock where name = ?";
+		db.sql = "select count from product where name = ?";
 		int count = 0;
 		
 		try {
@@ -94,100 +94,107 @@ public class StockDAO {
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
 		
 		return count;
 	}
 	
-	public boolean insertStock(Stock stock) {
+	public int insertProduct(Product product) {
+		int result = 0;
+		
 		db.connectDB();
-		db.sql = "insert into stock(name, count, price) values(?, ?, ?)";
+		db.sql = "insert into product(name, count, price) values(?, ?, ?)";
 		
 		try {
 			db.pstmt = db.conn.prepareStatement(db.sql);
-			db.pstmt.setString(1, stock.getStock_Name());
-			db.pstmt.setInt(2, stock.getStock_Count());
-			db.pstmt.setInt(3, stock.getStock_Price());
-			db.pstmt.executeUpdate();
+			db.pstmt.setString(1, product.getProduct_name());
+			db.pstmt.setInt(2, product.getProduct_count());
+			db.pstmt.setInt(3, product.getProduct_price());
+			result = db.pstmt.executeUpdate();
 		} 
 		
 		catch (SQLException e) {
 			e.printStackTrace();
-			return false;
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
-		return true;
+		return result;
 	}
 	
-	public boolean updateStock(int Stock_Count, int Purchase_Count, String Stock_Name) {
+	public int updateProduct(String type, int Purchase_Count, String Product_Name) {
+		int result = 0;
+		
 		db.connectDB();
-		db.sql = "update stock set count = ? - ?  where name = ?";
+		
+		if (type.equals("판매"))
+			db.sql = "update product set count = count - ?  where name = ?";
+		else
+			db.sql = "update product set count = count + ?  where name = ?";
 		
 		try {
 			db.pstmt = db.conn.prepareStatement(db.sql);
-			db.pstmt.setInt(1, Stock_Count);
-			db.pstmt.setInt(2, Purchase_Count);
-			db.pstmt.setString(3, Stock_Name);
-			db.pstmt.executeUpdate();
+			db.pstmt.setInt(1, Purchase_Count);
+			db.pstmt.setString(2, Product_Name);
+			result = db.pstmt.executeUpdate();
 		} 
 		
 		catch (SQLException e) {
 			e.printStackTrace();
-			return false;
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
-		return true;
+		return result;
 	}
 	
-	public boolean updateStock(Stock stock) {
+	public int updateProduct(Product product) {
+		int result = 0;
+		
 		db.connectDB();
-		db.sql = "update stock set name = ?, count = ?, price = ? where number = ?";
+		db.sql = "update product set name = ?, count = ?, price = ? where pid = ?";
 		
 		try {
 			db.pstmt = db.conn.prepareStatement(db.sql);
-			db.pstmt.setString(1, stock.getStock_Name());
-			db.pstmt.setInt(2, stock.getStock_Count());
-			db.pstmt.setInt(3, stock.getStock_Price());
-			db.pstmt.setInt(4, stock.getNumber());
-			db.pstmt.executeUpdate();
+			db.pstmt.setString(1, product.getProduct_name());
+			db.pstmt.setInt(2, product.getProduct_count());
+			db.pstmt.setInt(3, product.getProduct_price());
+			db.pstmt.setInt(4, product.getPid());
+			result = db.pstmt.executeUpdate();
 		} 
 		
 		catch (SQLException e) {
 			e.printStackTrace();
-			return false;
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
-		return true;
+		return result;
 	}
 	
-	public boolean deleteStock(int number) {
+	public int deleteProduct(int pid) {
+		int result = 0;
+		
 		db.connectDB();
-		db.sql = "delete from stock where number = ?";
+		db.sql = "delete from product where pid = ?";
 		
 		try {
 			db.pstmt = db.conn.prepareStatement(db.sql);
-			db.pstmt.setInt(1, number);
-			db.pstmt.executeUpdate();
+			db.pstmt.setInt(1, pid);
+			result = db.pstmt.executeUpdate();
 		} 
 		
 		catch (SQLException e) {
 			e.printStackTrace();
-			return false;
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
-		return true;
+		return result;
 	}
 }

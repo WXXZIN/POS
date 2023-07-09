@@ -1,37 +1,34 @@
 package DB;
 
-public class Stock {
+public class Product {
 
-	// stock Table
-	private int number;
-	private String Stock_Name;
-	private int Stock_Count;
-	private int Stock_Price;
+	private int pid;
+	private String product_name;
+	private int product_count;
+	private int product_price;
 	
-	// Getter & Setter 메소드
-	
-	public int getNumber() {
-		return number;
+	public int getPid() {
+		return pid;
 	}
-	public void setNumber(int number) {
-		this.number = number;
+	public void setPid(int pid) {
+		this.pid = pid;
 	}
-	public String getStock_Name() {
-		return Stock_Name;
+	public String getProduct_name() {
+		return product_name;
 	}
-	public void setStock_Name(String stock_Name) {
-		Stock_Name = stock_Name;
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
 	}
-	public int getStock_Count() {
-		return Stock_Count;
+	public int getProduct_count() {
+		return product_count;
 	}
-	public void setStock_Count(int stock_Count) {
-		Stock_Count = stock_Count;
+	public void setProduct_count(int product_count) {
+		this.product_count = product_count;
 	}
-	public int getStock_Price() {
-		return Stock_Price;
+	public int getProduct_price() {
+		return product_price;
 	}
-	public void setStock_Price(int stock_Price) {
-		Stock_Price = stock_Price;
+	public void setProduct_price(int product_price) {
+		this.product_price = product_price;
 	}
 }

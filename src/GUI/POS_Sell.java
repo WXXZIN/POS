@@ -3,15 +3,15 @@ package GUI;
 import DB.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class POS_Sell extends JFrame implements ActionListener {
-	private JLabel iconLabel;
-	private JLabel user = new JLabel("");
+	private String [] header = {"상품명", "수량", "가격"};
+	private JLabel userIcon;
+	private JLabel userName = new JLabel("");
 	private JButton btnBack;
 	private JButton btnLogout;
 	private JButton btnPurchase;
@@ -30,7 +30,6 @@ public class POS_Sell extends JFrame implements ActionListener {
 	private ImageIcon imgAddItem = new ImageIcon("img/imgAddItem.png");
 	private ImageIcon imgPlus = new ImageIcon("img/imgPlus.png");
 	private ImageIcon imgMinus = new ImageIcon("img/imgMinus.png");
-	private String [] header = {"이름", "개수", "가격"};
 	
     public DefaultTableModel model = new DefaultTableModel(header, 0) {
     	public boolean isCellEditable(int row, int column) {
@@ -38,42 +37,34 @@ public class POS_Sell extends JFrame implements ActionListener {
     	}
     };
 	
-	Vector<Stock> datas = new Vector<Stock>();
-	StockDAO S_db = new StockDAO();
-	ReceiptDAO R_db = new ReceiptDAO();
+    protected Vector<Product> product_Data = new Vector<Product>();
+    protected ProductDAO P_db = new ProductDAO();
+    protected ReceiptDAO R_db = new ReceiptDAO();
 	
-	public POS_Sell() {
-		admin = true;
-		user.setText("Administrator");
-		POS_Sell_Display();
+	public POS_Sell(boolean isAdmin) {
+		this.admin = isAdmin;
+		userName.setText(admin ? "Admin" : "User");
+		display_POS_Sell();
 		RefreshDB();
 	}
 	
-	public POS_Sell(boolean a) {
-		admin = false;
-		user.setText("User");
-		POS_Sell_Display();
-		RefreshDB();
-	}
-	
-	private void POS_Sell_Display() {
+	private void display_POS_Sell() {
 		Container ct = getContentPane();
 		ct.setLayout(null);
 		ct.setBackground(new Color(248, 248, 248));
+		
+		userIcon= new JLabel(imgUser);
 		
 		JPanel userPanel = new JPanel();
 		JPanel purchasePanel = new JPanel();
 		
 		userPanel.setLayout(null);
 		userPanel.setBackground(Color.white);
+		userPanel.add(userIcon).setBounds(10, 5, 30, 30);
+		userPanel.add(userName).setBounds(50, 5, 100, 30);
 		
 		purchasePanel.setLayout(null);
 		purchasePanel.setBackground(Color.white);
-		
-		iconLabel= new JLabel(imgUser);
-		
-		userPanel.add(iconLabel).setBounds(10, 5, 30, 30);
-		userPanel.add(user).setBounds(50, 5, 100, 30);
 		
 		UserTable = new JTable(model);
 		UserTable.setRowHeight(40);
@@ -154,20 +145,16 @@ public class POS_Sell extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 		MainProcess main;
 		
-		String Stock_Name = (String)jcb.getSelectedItem();
-		int Stock_Price = S_db.getPrice(Stock_Name);
+		String Product_Name = (String)jcb.getSelectedItem();
+		int Product_Price = P_db.getPrice(Product_Name);
 		int Purchase_Count = 1;
-		int Stock_Count = S_db.getCount(Stock_Name);
+		int Product_Count = P_db.getCount(Product_Name);
 		int total = 0;
 		
 		if (obj == btnBack)  {
 			this.dispose();
 			
-			if (admin == true)
-				new MainPOS();
-			
-			else
-				new MainPOS(!admin);
+			new MainPOS(admin);
 		}
 		
 		else if (obj == btnLogout) {
@@ -179,13 +166,12 @@ public class POS_Sell extends JFrame implements ActionListener {
 		
 		else if (obj == btnAddItem) {
 			btnPurchase.setEnabled(true);
-			if (!isAdded(Stock_Name, model)) 
+			if (!isAdded(Product_Name, model)) {
 				JOptionPane.showMessageDialog(null, "물품이 이미 추가되었습니다.", "Error", JOptionPane.ERROR_MESSAGE);
-			
+			}
 			else {
-				
-				if(Purchase_Count <= Stock_Count)
-					model.addRow(new String [] {Stock_Name, String.valueOf(Purchase_Count), String.valueOf(Stock_Price)});
+				if(Purchase_Count <= Product_Count)
+					model.addRow(new String [] {Product_Name, String.valueOf(Purchase_Count), String.valueOf(Product_Price)});
 				
 				else
 					JOptionPane.showMessageDialog(null, "물품의 재고가 없습니다.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -195,23 +181,21 @@ public class POS_Sell extends JFrame implements ActionListener {
 		}
 		
 		else if (obj == btnPlus) {
-			int Sel_Index = SellTable.getSelectedRow();
+			int row = SellTable.getSelectedRow();
 			
-			String Sel_Stock_Name = model.getValueAt(Sel_Index, 0).toString();
-			int Sel_Stock_Price = S_db.getPrice(Sel_Stock_Name);
-			
-			
-            if (Sel_Index == -1)
-                JOptionPane.showMessageDialog(null, "DB를 불러오지 않았거나 셀을 선택하지 않았습니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            if (row == -1)
+                JOptionPane.showMessageDialog(null, "DB를 불러오지 않았거나  셀을 선택하지 않았습니다", "Error", JOptionPane.ERROR_MESSAGE);
 
             else {
-				
-            	if ( Integer.parseInt(model.getValueAt(Sel_Index, 1).toString()) >= Stock_Count)
+            	String Sel_Product_Name = model.getValueAt(row, 0).toString();
+    			int Sel_Product_Price = P_db.getPrice(Sel_Product_Name);
+    			
+            	if ( Integer.parseInt(model.getValueAt(row, 1).toString()) >= Product_Count)
 					JOptionPane.showMessageDialog(null, "물품의 수량이 남은 재고수량 보다 많습니다.", "Error", JOptionPane.ERROR_MESSAGE);
 				
 				else {
-					model.setValueAt(Integer.parseInt(model.getValueAt(Sel_Index, 1).toString()) + 1, Sel_Index, 1);
-					model.setValueAt(Integer.parseInt(model.getValueAt(Sel_Index, 1).toString()) * Sel_Stock_Price, Sel_Index, 2);
+					model.setValueAt(Integer.parseInt(model.getValueAt(row, 1).toString()) + 1, row, 1);
+					model.setValueAt(Integer.parseInt(model.getValueAt(row, 1).toString()) * Sel_Product_Price, row, 2);
 				}
             }
             
@@ -219,20 +203,20 @@ public class POS_Sell extends JFrame implements ActionListener {
 		}
 		
 		else if (obj == btnMinus) {
-			int Sel_Index = SellTable.getSelectedRow();
+			int row = SellTable.getSelectedRow();
 			
-			String Sel_Stock_Name = model.getValueAt(Sel_Index, 0).toString();
-			int Sel_Stock_Price = S_db.getPrice(Sel_Stock_Name);
-			
-            if (Sel_Index == -1)
+            if (row == -1)
                 JOptionPane.showMessageDialog(null, "DB를 불러오지 않았거나 셀을 선택하지 않았습니다.", "Error", JOptionPane.ERROR_MESSAGE);
 
             else {
-				model.setValueAt(Integer.parseInt(model.getValueAt(Sel_Index, 1).toString()) - 1, Sel_Index, 1);
-				model.setValueAt(Integer.parseInt(model.getValueAt(Sel_Index, 1).toString()) * Sel_Stock_Price, Sel_Index, 2);
+            	String Sel_Product_Name = model.getValueAt(row, 0).toString();
+    			int Sel_Product_Price = P_db.getPrice(Sel_Product_Name);
+    			
+				model.setValueAt(Integer.parseInt(model.getValueAt(row, 1).toString()) - 1, row, 1);
+				model.setValueAt(Integer.parseInt(model.getValueAt(row, 1).toString()) * Sel_Product_Price, row, 2);
 				
-				if (Integer.parseInt(model.getValueAt(Sel_Index, 1).toString()) < 1) {
-					model.removeRow(Sel_Index);
+				if (Integer.parseInt(model.getValueAt(row, 1).toString()) < 1) {
+					model.removeRow(row);
 					
 					if (model.getRowCount() < 1) {
 						FieldTotal.setText("");
@@ -246,37 +230,34 @@ public class POS_Sell extends JFrame implements ActionListener {
 		
 		else if (obj == btnPurchase) {
 			Receipt receipt = new Receipt();
-            Date date = new Date();
-            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy/MM/dd");
-            String nowDate = simpleDate.format(date);
-			String name;
+            String product_name;
 			String purchase = "";
-			String input;
+			String pay;
 			
 			int count;
 			int purchase_total = Integer.parseInt(FieldTotal.getText());
-			int res;
-			int result = JOptionPane.showConfirmDialog(null, "결제하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
+			int change;
+			int result = JOptionPane.showConfirmDialog(null, "결제 하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
 			
 			for (int i = 0; i < model.getRowCount(); i++) {
-				name = model.getValueAt(i, 0).toString();
+				product_name = model.getValueAt(i, 0).toString();
 				count = Integer.parseInt(model.getValueAt(i, 1).toString());
-				purchase = purchase+ name + "(" + count + ") ";	
+				purchase = purchase + product_name + "(" + count + ") ";	
 			}
 			
 			if (result == JOptionPane.YES_OPTION) {
-                input = JOptionPane.showInputDialog("총 금액은" + purchase_total + "입니다.\n 얼마를 지불하시겠습니까?");
+				pay = JOptionPane.showInputDialog("총 금액은" + purchase_total + "입니다.\n얼마를 지불하시겠습니까?");
                 
-                if (input != null) {
-                	if (Integer.parseInt(input) >= purchase_total) {
-                    	res = Integer.parseInt(input) - purchase_total;
-                        JOptionPane.showMessageDialog(null, "지불하신 금액은" + input + "\n 거스름돈은 " + res + "입니다.");
+                if (pay != null) {
+                	if (Integer.parseInt(pay) >= purchase_total) {
+                		change = Integer.parseInt(pay) - purchase_total;
+                        JOptionPane.showMessageDialog(null, "지불하신 금액은 " + pay + "\n 거스름돈은 " + change + "입니다");
                         
-                        receipt.setDate(nowDate);
-                        receipt.setPurcahse(purchase);
+                        receipt.setType("판매");
+                        receipt.setPurchase(purchase);
                         receipt.setSales(purchase_total);
                         R_db.insertReceipt(receipt);
-                        Stock_Update(model);
+                        Product_Update(model);
                         RefreshDB();
                     }
                 	
@@ -300,8 +281,13 @@ public class POS_Sell extends JFrame implements ActionListener {
 	}
 	
 	private void RefreshDB() {
-		datas = S_db.getAllStock();
-		jcb.setModel(new DefaultComboBoxModel<String>(S_db.getStock()));
+		product_Data = P_db.getAllProduct();
+		jcb.setModel(new DefaultComboBoxModel<String>(P_db.getProduct()));
+		
+		int rows = model.getRowCount();
+		
+		for (int i = rows - 1; i >= 0; i--)
+			model.removeRow(i);
 	}
 	
 	private boolean isAdded(String text, DefaultTableModel model) {
@@ -315,14 +301,6 @@ public class POS_Sell extends JFrame implements ActionListener {
         return added;
     }
 	
-	private void Clear() {
-		FieldTotal.setText("");
-		
-		for (int i =  model.getRowCount() - 1; i >= 0; i--) {
-			model.removeRow(i);
-		}
-	}
-	
 	private void getTotal(int total) {
 		for (int i = 0; i < model.getRowCount(); i++) {
 			total += Integer.parseInt(model.getValueAt(i, 2).toString());
@@ -330,18 +308,16 @@ public class POS_Sell extends JFrame implements ActionListener {
 		}
 	}
 	
-    private void Stock_Update(DefaultTableModel model) {
-    	String Stock_Name = null;
+    private void Product_Update(DefaultTableModel model) {
+    	String type = "판매";
+    	String Product_Name = null;
         int Purchase_Count = 0;
-        int Stock_Count = 0;
 
         for (int i = 0; i < model.getRowCount(); i++) {
-        	Stock_Name = model.getValueAt(i, 0).toString();
+        	Product_Name = model.getValueAt(i, 0).toString();
         	Purchase_Count = Integer.parseInt(model.getValueAt(i, 1).toString());
-        	Stock_Count = S_db.getCount(Stock_Name);
         	
-        	S_db.updateStock(Stock_Count, Purchase_Count, Stock_Name);
+        	P_db.updateProduct(type, Purchase_Count, Product_Name);
         }
-        Clear();
     }
 }

@@ -4,18 +4,18 @@ import java.sql.*;
 
 public class DB {
 
-	public static final String jdbcUrl = "jdbc:mysql://localhost/pos?";
-	public static final String id = "root";
-	public static final String pw = "1234";
+	private static final String jdbcUrl = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+	private static final String id = "POS";
+	private static final String pw = "1234";
 	
 	public Connection conn = null;
 	public PreparedStatement pstmt = null;
 	public ResultSet rs = null;	
-	public String sql;
+	public String sql = null;
 	
 	public void connectDB() {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection(jdbcUrl, id, pw);
 		} 
 		
@@ -24,10 +24,11 @@ public class DB {
 		}
 	}
 	
-	public void closeDB() {
+	public void disconnectDB() {
 		try {
-			pstmt.close();
-			conn.close();
+			if (rs != null) rs.close();
+			if (pstmt != null) pstmt.close();
+			if (conn != null) conn.close();
 		} 
 		
 		catch (SQLException e) {

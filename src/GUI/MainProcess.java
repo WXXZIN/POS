@@ -11,13 +11,8 @@ public class MainProcess {
 		main.login.setMain(main);
 	}
 	
-	public void showMainAdmin() {
+	public void showMain(boolean isAdmin) {
 		login.dispose();
-		this.pos = new MainPOS();
-	}
-	
-	public void showMainUser() {
-		login.dispose();
-		this.pos = new MainPOS(!main.login.admin);
+		pos = new MainPOS(isAdmin);
 	}
 }

@@ -49,16 +49,16 @@ public class Login extends JFrame implements ActionListener, KeyListener {
         setVisible(true);
     }
     
-    // mainProcess와 연동
+    // mainProcess       
     public void setMain(MainProcess main) {
         this.main = main;
     }
     
-    public boolean isLoginCheck(String id) {
-		boolean blogin = false;
+    private boolean LoginCheck(String id) {
+		boolean login = false;
 		
 		db.connectDB();
-		db.sql = "select * from user where ID = ?";
+		db.sql = "select * from users where ID = ?";
 		
 		try {
 			db.pstmt = db.conn.prepareStatement(db.sql);
@@ -68,10 +68,10 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 			
 			while(db.rs.next()) {
 				if(id.equals(db.rs.getString("ID")))
-					blogin = true;
+					login = true;
 								
 				else
-					blogin = false;
+					login = false;
 			}
 		}
 		
@@ -80,10 +80,10 @@ public class Login extends JFrame implements ActionListener, KeyListener {
 		}
 		
 		finally {
-			db.closeDB();
+			db.disconnectDB();
 		}
 		
-		return blogin;
+		return login;
 	}
     
     @Override
@@ -92,22 +92,19 @@ public class Login extends JFrame implements ActionListener, KeyListener {
     	Object obj = e.getSource();
 		
 		if (obj == btnLogin)
-			if(isLoginCheck(IDText.getText())) {
+			if(LoginCheck(IDText.getText())) {
 				JOptionPane.showMessageDialog(null, "Login Success");
 				
-				if (IDText.getText().equals("admin")) {
+				if (IDText.getText().equals("admin"))
 					admin = true;
-					main.showMainAdmin(); // 메인창 메소드를 이용해 창 띄우기
-				}
-				
-				else {
+				else
 					admin = false;
-					main.showMainUser();
-				}
+				
+				main.showMain(admin);
 			}
 			
 			else
-				JOptionPane.showMessageDialog(null, "ID를 정확하게 입력해주세요.", "Error", JOptionPane.ERROR_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "ID가 존재하지 않습니다.", "Error", JOptionPane.ERROR_MESSAGE);	
 	}
     
 	@Override
