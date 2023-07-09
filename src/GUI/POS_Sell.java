@@ -30,7 +30,7 @@ public class POS_Sell extends JFrame implements ActionListener {
 	private ImageIcon imgAddItem = new ImageIcon("img/imgAddItem.png");
 	private ImageIcon imgPlus = new ImageIcon("img/imgPlus.png");
 	private ImageIcon imgMinus = new ImageIcon("img/imgMinus.png");
-	private String [] header = {"�̸�", "����", "����"};
+	private String [] header = {"이름", "개수", "가격"};
 	
     public DefaultTableModel model = new DefaultTableModel(header, 0) {
     	public boolean isCellEditable(int row, int column) {
