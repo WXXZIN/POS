@@ -8,9 +8,9 @@ import java.awt.event.*;
 import java.util.*;
 
 public class POS_UM extends JFrame implements ActionListener, MouseListener{
-    private String [] header = new String [] {"id"};
-	private JLabel iconLabel;
-	private JLabel user = new JLabel("");
+    private String [] header = new String [] {"사용자 현황"};
+	private JLabel userIcon;
+	private JLabel userName = new JLabel("");
     private JLabel label = new JLabel("사용자 현황");
     private JLabel labelId = new JLabel("ID");
     private JTable table;
@@ -19,7 +19,6 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
     private JButton btnAdd;
     private JButton btnDel;
 	private JTextField FieldId;
-    private boolean admin;
 	private ImageIcon imgBack = new ImageIcon("img/imgBack.png");
 	private ImageIcon imgUser = new ImageIcon("img/imgUser.png");
 	private ImageIcon imgLogout = new ImageIcon("img/imgLogout.png");
@@ -30,20 +29,12 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
     	}
     };
     
-    protected Vector<UserDAO> data = new Vector<UserDAO>(); 
-    protected Vector<String> id_Data = new Vector<String>();
+    protected Vector<User> user_Data = new Vector<User>(); 
+    protected Vector<String> user_Id = new Vector<String>();
     protected UserDAO A_db = new UserDAO();
     
     public POS_UM() {
-    	admin = true;
-    	user.setText("Administrator");
-    	POS_UM_Display();
-        RefreshDB();
-    }
-    
-    public POS_UM(boolean a) {
-    	admin = false;
-    	user.setText("User");
+    	userName.setText("Admin");
     	POS_UM_Display();
     	RefreshDB();
     }
@@ -53,15 +44,13 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
         ct.setLayout(null);
         ct.setBackground(new Color(248, 248, 248));
 		
+        userIcon= new JLabel(imgUser);
+		
 		JPanel userPanel = new JPanel();
-        
-		userPanel.setLayout(null);
+        userPanel.setLayout(null);
 		userPanel.setBackground(Color.white);
-		
-		iconLabel= new JLabel(imgUser);
-		
-		userPanel.add(iconLabel).setBounds(10, 5, 30, 30);
-		userPanel.add(user).setBounds(50, 5, 100, 30);
+		userPanel.add(userIcon).setBounds(10, 5, 30, 30);
+		userPanel.add(userName).setBounds(50, 5, 100, 30);
 		
 		btnBack = new JButton(imgBack);
 		btnBack.setBorderPainted(false);
@@ -75,7 +64,6 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
 		
         label.setFont(new Font("맑은 고딕", Font.BOLD, 15));
         labelId.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-        
         FieldId = new JTextField();
 		
         btnAdd = new JButton("등록");
@@ -122,11 +110,7 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
         if (obj == btnBack)  {
 			this.dispose();
 			
-			if (admin == true)
-				new MainPOS();
-			
-			else
-				new MainPOS(!admin);
+			new MainPOS(true);
 		}
 		
 		else if (obj == btnLogout) {
@@ -138,13 +122,13 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
         
         else if (obj == btnAdd) {
     		if (FieldId.getText().equals(""))
-            	JOptionPane.showMessageDialog(null, "다시 입력해주세요.", "Error", JOptionPane.ERROR_MESSAGE);
+            	JOptionPane.showMessageDialog(null, "다시 입력 해주세요.", "Error", JOptionPane.ERROR_MESSAGE);
     		
-    		else if (isExist(id_Data, FieldId.getText()))
+    		else if (isExist(user_Id, FieldId.getText()))
     			JOptionPane.showMessageDialog(null, "존재하는 사용자입니다.", "Error", JOptionPane.ERROR_MESSAGE);
 
     		else {
-                int result = JOptionPane.showConfirmDialog(null, "선택한 사용자 " + FieldId.getText() + "을 DB에 등록하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
+                int result = JOptionPane.showConfirmDialog(null, "선택한 사용자 " + FieldId.getText() + "을 데이터베이스에 등록하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
                 
                 if (result == JOptionPane.YES_OPTION) {
                     A_db.insertUser(FieldId.getText());
@@ -160,16 +144,13 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
         
         else if (obj == btnDel) {
             if (FieldId.getText().equals(""))
-            	JOptionPane.showMessageDialog(null, "다시 입력해주세요.", "Error", JOptionPane.ERROR_MESSAGE);
-            
-            else if (FieldId.getText().equals("admin"))
-            	JOptionPane.showMessageDialog(null, "삭제할 수 없는 사용자입니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            	JOptionPane.showMessageDialog(null, "다시 입력 해주세요.", "Error", JOptionPane.ERROR_MESSAGE);
          
-            else if (!isExist(id_Data, FieldId.getText()))
+            else if (!isExist(user_Id, FieldId.getText()))
                 JOptionPane.showMessageDialog(null, "존재하지 않는 사용자입니다.", "Error", JOptionPane.ERROR_MESSAGE);
             
     		else {
-                int result = JOptionPane.showConfirmDialog(null, "선택한 사용자 " + FieldId.getText() + "을 DB에서 삭제하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
+                int result = JOptionPane.showConfirmDialog(null, "선택한 사용자 " + FieldId.getText() + "을 데이터베이스에서 삭제하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
                 
                 if (result == JOptionPane.YES_OPTION) {
                 	A_db.deleteUser(FieldId.getText());
@@ -185,16 +166,16 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
     }
 
     private void RefreshDB() {
-    	data = A_db.getAllUser();
-    	id_Data = A_db.getUserId();
+    	user_Data = A_db.getAllUserId();
+    	user_Id = A_db.getUserId();
     	
     	int rows = model.getRowCount();
         
-        for (int i = rows-1; i >= 0; i--) {
+        for (int i = rows - 1; i >= 0; i--) {
             model.removeRow(i);
         }
         
-        for (UserDAO user : data) {
+        for (User user : user_Data) {
             String Id = user.getId();
             
             model.addRow(new String[]{Id});
@@ -223,7 +204,7 @@ public class POS_UM extends JFrame implements ActionListener, MouseListener{
 			JOptionPane.showMessageDialog(null, "셀을 선택하세요.");
 		
 		else
-			FieldId.setText(table.getModel().getValueAt(row, 0).toString());
+			FieldId.setText(model.getValueAt(row, 0).toString());
 	}
 
 	@Override
