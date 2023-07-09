@@ -24,20 +24,20 @@ VER_2023 : VER_2022의 개선점 보안<br>
 - 관리자와 일반 사용자를 구분하여 메인 창으로 이동
 - 일반 사용자는 일부 기능 접근 불가
 ### 로그인
-![스크린샷 2023-07-09 215040](https://github.com/WXXZIN/POS/assets/138375011/62afedb1-7891-4424-a9be-d969827dd859)
-![스크린샷 2023-07-09 224233](https://github.com/WXXZIN/POS/assets/138375011/fabc07af-1b7b-45b3-acb7-b5c1ca71cbdf)
+![스크린샷 2023-07-09 215040](https://github.com/WXXZIN/POS/assets/138375011/ea207887-ff57-4f91-a834-87be3947c335)
+![스크린샷 2023-07-09 224233](https://github.com/WXXZIN/POS/assets/138375011/71ab7412-ce09-4993-a798-ec444d51b15e)
 ### 로그인 후 메인화면
-![스크린샷 2023-07-09 215127](https://github.com/WXXZIN/POS/assets/138375011/0bc2e972-4836-41d5-816f-99ad274c59cf)
-![스크린샷 2023-07-09 224327](https://github.com/WXXZIN/POS/assets/138375011/d7f62543-2a5e-49e1-9925-1e1b2b25d05d)
+![스크린샷 2023-07-09 215127](https://github.com/WXXZIN/POS/assets/138375011/2a427174-7c44-478f-ac18-e3630f8bf809)
+![스크린샷 2023-07-09 224327](https://github.com/WXXZIN/POS/assets/138375011/207beacf-6df5-4af6-8eb3-42f9569fedf9)
 ### 사용자 관리
-![스크린샷 2023-07-09 215514](https://github.com/WXXZIN/POS/assets/138375011/85717870-91f4-48b4-a8c1-b731dc4ce66b)
+![스크린샷 2023-07-09 215514](https://github.com/WXXZIN/POS/assets/138375011/0881b049-dfeb-452d-860a-8ec8b6eee683)
 ### 판매
-![스크린샷 2023-07-09 215200](https://github.com/WXXZIN/POS/assets/138375011/30cb0aac-3acb-416e-9820-e757322592fd)
+![스크린샷 2023-07-09 215200](https://github.com/WXXZIN/POS/assets/138375011/a65e8268-5be4-42f3-aa3c-2a68ea7f3100)
 ### 재고 관리
-![스크린샷 2023-07-09 215504](https://github.com/WXXZIN/POS/assets/138375011/22d8da18-8654-4faf-831c-6279392c9f84)
-![스크린샷 2023-07-09 224338](https://github.com/WXXZIN/POS/assets/138375011/5058a44c-8a10-4b7b-9d84-e151109e1c6e)
+![스크린샷 2023-07-09 215504](https://github.com/WXXZIN/POS/assets/138375011/6895c3c9-36c8-4c0e-a38d-f9da5b9a8f63)
+![스크린샷 2023-07-09 224338](https://github.com/WXXZIN/POS/assets/138375011/922552dc-4cb8-47a1-a7ad-f3a801558836)
 ### 영수증 업무
-![스크린샷 2023-07-09 215453](https://github.com/WXXZIN/POS/assets/138375011/69ed6979-1e42-4bc6-b7de-8cbfd880bc49)
+![스크린샷 2023-07-09 215453](https://github.com/WXXZIN/POS/assets/138375011/501575d1-b40e-40f5-9937-e29cea846706)
 <br>
 
 ## 개선점
