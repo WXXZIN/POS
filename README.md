@@ -41,3 +41,8 @@
 ```bash
 $ git clone https://github.com/WXXZIN/POS.git
 ```
+## 💁‍♂️ 프로젝트 팀원
+| Backend | Frontend |
+|:---:|:---:|
+| <img src="https://github.com/WXXZIN.png" width="100" /> | <img src="https://github.com/Mustache0318.png" width="100" /> |
+| [최원진](https://github.com/WXXZIN) | [김지희](https://github.com/Mustache0318) |
