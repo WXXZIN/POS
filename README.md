@@ -23,7 +23,7 @@
 
 ## 🛠 기술 스택
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=python&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Oracle](https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 
 ## 💡 주요 기능
